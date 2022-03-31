@@ -9,6 +9,8 @@ Vue.config.productionTip = false
 
 Vue.prototype.Utils = Utils;
 
+Vue.prototype.resourceAvatar = 'http://localhost:8080/sport/resources/';
+
 new Vue({
   router,
   render: h => h(App)

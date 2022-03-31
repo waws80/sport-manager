@@ -2,11 +2,15 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import router from "@/router";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = "http://localhost:8080";
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+axios.defaults.headers.common['id'] = localStorage.id
+axios.defaults.headers.common['deviceInfo'] = "sport-manager-client"
 
 let config = {
   baseURL: "http://localhost:8080/sport",
@@ -21,7 +25,7 @@ _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
     axios.defaults.headers.common['id'] = localStorage.id
-    axios.defaults.headers.common['deviceInfo'] = navigator.userAgent
+    axios.defaults.headers.common['deviceInfo'] = "sport-manager-client"
     return config;
   },
   function(error) {
@@ -37,6 +41,10 @@ _axios.interceptors.response.use(
     return response;
   },
   function(error) {
+      if (error.response.status === 400 || error.response.status === 401){
+          router.replace('/login');
+          console.log('------------');
+      }
     // Do something with response error
     return Promise.reject(error);
   }

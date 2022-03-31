@@ -12,13 +12,41 @@
    </Form>
 
 
-   <Table border :columns="columns1" :data="data1" :height="tableHeight" class="user-table"></Table>
+   <Table border :columns="columns" :data="data" :height="tableHeight" class="user-table" no-data-text="暂无用户">
+
+     <template slot-scope="{ row }" slot="avatar">
+       <img :src="'http://localhost:8080/sport/resources/avatar/' + row.avatar" style="height: 56px; width: 56px"/>
+     </template>
+
+     <template slot-scope="{ row }" slot="sex">
+       <strong>{{ row.sex === 0? '男' : '女'  }}</strong>
+     </template>
+
+     <template slot-scope="{ row }" slot="birthDate">
+       <strong>{{ new Date(row.birthDate).getFullYear() + "-" + (new Date(row.birthDate).getMonth() + 1) + "-" + new Date(row.birthDate).getDate() }}</strong>
+     </template>
+
+     <template slot-scope="{ row, index }" slot="status">
+       <Button :type="row.status === 0? 'primary' : 'error'" size="small" style="margin-right: 5px" @click="editStatus(index)">
+         <strong>{{ row.status === 0? '正常' : '封禁'  }}</strong>
+       </Button>
+     </template>
+
+     <template slot-scope="{ row }" slot="action">
+       <Button type="primary" shape="circle" size="small" style="margin-right: 5px" @click="goSportPage(row.id)">
+         运动数据
+       </Button>
+     </template>
+
+   </Table>
 
 
  </div>
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
   name: "UserManager",
 
@@ -27,10 +55,12 @@ export default {
       searchForm:{
         username:""
       },
+      avatarUrl: this.resourceAvatar,
       tableHeight: '500px',
-      columns1: [
+      columns: [
         {
           title: '头像',
+          slot: 'avatar',
           key: 'avatar'
         },
         {
@@ -43,115 +73,26 @@ export default {
         },
         {
           title: '性别',
+          slot: 'sex',
           key: 'sex'
         },
         {
           title: '出生日期',
+          slot: 'birthDate',
           key: 'birthDate'
         },
         {
           title: '状态',
+          slot: 'status',
           key: 'status'
+        },
+        {
+          title: '操作',
+          slot: 'action',
         }
       ],
-      data1: [
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-        {
-          avatar: 'adsads',
-          nickname: 'John Brown',
-          phoneNumber: 1819999887678,
-          sex: '男',
-          birthDate: '2016-10-03',
-          status:'正常'
-        },
-      ]
+      data: [],
+      srcData:[],
     }
   },
 
@@ -159,10 +100,14 @@ export default {
     //获取所有用户信息
     this.axios.get("user/allUser")
       .then(response=>{
-        console.log(response)
+        if (response.status !== 200){
+          return;
+        }
+        this.data = response.data;
+        this.srcData = this.data;
       })
       .catch(error=>{
-        console.log(error)
+        console.log(error.response)
       })
       .finally(()=>{
         console.log("finish")
@@ -171,13 +116,61 @@ export default {
 
   mounted() {
     this.tableHeight = (document.getElementsByClassName('user-layout')[0].clientHeight - document.getElementsByClassName('user-form')[0].clientHeight) - 56;
-    console.log(this.tableHeight);
   },
 
   methods:{
 
     handleSubmit(data){
-      console.log(data);
+      if (data.username.length === 0){
+        this.data = this.srcData;
+      }else {
+        console.log(data.username);
+        var find = this.srcData.find((item, index, arr) => {
+          console.log(index, arr);
+          return item.nickname.includes(data.username);
+        });
+        if (find){
+          this.data = [];
+          this.data.push(find);
+        }else {
+          this.data = [];
+        }
+
+      }
+    },
+
+    editStatus(index){
+      const item = this.data[index];
+      let s = 0;
+      if (item.status === 0){
+        s = 1;
+      }else {
+        s = 0;
+      }
+      this.axios({
+        url: 'user/status',
+        method:'put',
+        params:{
+          status: s,
+          userId: item.id,
+        }
+
+      }).then(response=>{
+        if (response.status !== 200){
+          return;
+        }
+        this.data[index].status = s;
+      })
+          .catch(error=>{
+            console.log(error.response)
+          })
+          .finally(()=>{
+            console.log("finish")
+          });
+    },
+    goSportPage(userId){
+      console.log(userId);
+      router.push({path:'/sport', query:{id: userId}});
     }
 
   }

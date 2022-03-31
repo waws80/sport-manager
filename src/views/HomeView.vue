@@ -13,11 +13,6 @@
 <!--            <span>课程管理</span>-->
             <router-link to ='/home/curriculum'>课程管理</router-link>
           </MenuItem>
-          <MenuItem name="1-3">
-            <Icon type="md-bicycle" />
-<!--            <span>运动管理</span>-->
-            <router-link to ='/home/sport'>运动管理</router-link>
-          </MenuItem>
         </Menu>
         <div slot="trigger"></div>
       </Sider>
