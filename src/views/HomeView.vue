@@ -19,6 +19,7 @@
       <Layout>
         <Header class="layout-header-bar" :style="{backgroundColor: '#ffffff'}">
           <strong>运动管理系统</strong>
+          <Button type="primary" size="small" class="home-logout" @click="logout">登出</Button>
         </Header>
         <Content :style="{margin: '16px', background: '#fff', minHeight: '220px'}">
           <router-view/>
@@ -58,14 +59,19 @@ export default {
     //判断是否登录
     if (this.Utils.iskLogin(function (){
       console.log("去登录");
-      router.replace("login");
-      //this.router.replace("login");
+      router.replace("/login");
     })){
       if (this.$route.path !== '/home/user'){
         this.$router.push('/home/user')
       }
     }
 
+  },
+  methods:{
+    logout(){
+      localStorage.clear();
+      router.replace("/login");
+    }
   }
 
 }
@@ -86,6 +92,13 @@ export default {
 .layout-header-bar{
   background: #fff;
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+.home-logout{
+  position: absolute;
+  text-align: center;
+  margin-top: 16px;
+  right: 16px;
+
 }
 .menu-item span{
   display: inline-block;
@@ -114,7 +127,6 @@ export default {
 }
 
 .ivu-layout{
-
   height: 100%;
 }
 

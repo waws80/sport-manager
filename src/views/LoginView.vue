@@ -72,9 +72,12 @@ export default {
         console.log("success", response);
         if (response.status === 200){
           this.status = 0;
-          this.$Message.success("登录成功");
-          localStorage.setItem("id", response.data.id)
-          router.replace('/')
+          const that = this;
+          localStorage.id = response.data.id;
+          setTimeout(function (){
+            that.$Message.success("登录成功");
+            router.replace('/')
+          },500)
         }
       }).catch(error =>{
         console.log(error);

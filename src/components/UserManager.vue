@@ -19,11 +19,15 @@
      </template>
 
      <template slot-scope="{ row }" slot="sex">
-       <strong>{{ row.sex === 0? '男' : '女'  }}</strong>
+       {{ row.sex === 0? '男' : '女'  }}
      </template>
 
      <template slot-scope="{ row }" slot="birthDate">
-       <strong>{{ new Date(row.birthDate).getFullYear() + "-" + new Date(row.birthDate).getMonth() + "-" + new Date(row.birthDate).getDate() }}</strong>
+       {{
+         new Date(row.birthDate).getFullYear() +
+         "-" + new Date(row.birthDate).getMonth() +
+        "-" + new Date(row.birthDate).getDate()
+       }}
      </template>
 
      <template slot-scope="{ row, index }" slot="status">
@@ -33,7 +37,7 @@
      </template>
 
      <template slot-scope="{ row }" slot="action">
-       <Button type="primary" shape="circle" size="small" style="margin-right: 5px" @click="goSportPage(row.id)">
+       <Button type="success"  size="small" style="margin-right: 5px" @click="goSportPage(row.id)">
          运动数据
        </Button>
      </template>
@@ -60,6 +64,7 @@ export default {
         {
           title: '头像',
           slot: 'avatar',
+          width: 100,
           key: 'avatar'
         },
         {
@@ -83,10 +88,12 @@ export default {
         {
           title: '状态',
           slot: 'status',
+          width: 80,
           key: 'status'
         },
         {
           title: '操作',
+          width: 100,
           slot: 'action',
         }
       ],
@@ -97,7 +104,14 @@ export default {
 
   created() {
     //获取所有用户信息
-    this.axios.get("user/allUser")
+    console.log("id", localStorage.id);
+
+    this.axios({
+      url: "user/allUser",
+      headers: {
+        id: localStorage.id,
+      }
+    })
       .then(response=>{
         if (response.status !== 200){
           return;

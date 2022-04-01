@@ -134,14 +134,22 @@
     </Modal>
 
 
-    <Table border :columns="columns" :data="data" :height="tableHeight" class="user-table" no-data-text="暂无用户">
+    <Table border :columns="columns" :data="data" :height="tableHeight" class="user-table" no-data-text="暂无课程">
 
       <template slot-scope="{ row }" slot="thumb">
         <img :src="'http://localhost:8080/sport/resources/img/' + row.thumb" style="height: 56px; width: 56px"/>
       </template>
 
+      <template slot-scope="{ row }" slot="video">
+        <Button type="warning" size="small" shape="circle" @click="showVideo(row.video)">预览视频</Button>
+      </template>
+
       <template slot-scope="{ row }" slot="content">
-        <div @click="showDetail(row.content)" class="curriculum-content"><strong>{{ row.content  }}</strong></div>
+        <div @click="showDetail(row.content)" class="curriculum-content"><strong>{{ row.content }}</strong></div>
+      </template>
+
+      <template slot-scope="{ row }" slot="duration">
+        <div @click="showDetail(row.content)" class="curriculum-content">{{ row.duration + '秒' }}</div>
       </template>
 
 
@@ -210,28 +218,33 @@ export default {
           title: '图像',
           slot: 'thumb',
           key: 'thumb',
-          width: 80,
+          width: 100,
         },
         {
           title: '视频',
+          slot: 'video',
+          width: 100,
           key: 'video'
         },
         {
           title: '课程名称',
+          width: 180,
           key: 'cname'
         },
         {
           title: '课程介绍',
           slot: 'content',
           key: 'content',
-          width: 100,
         },
         {
           title: '课程标签',
+          width: 180,
           key: 'tip'
         },
         {
           title: '时长',
+          width: 100,
+          slot: 'duration',
           key: 'duration'
         },
         {
@@ -241,7 +254,7 @@ export default {
         },
         {
           title: '操作',
-          width: 80,
+          width: 140,
           slot: 'action',
         }
       ],
@@ -490,6 +503,17 @@ export default {
         title: "课程介绍",
         content: content
       });
+    },
+
+    showVideo(video){
+
+      this.$Modal.info({
+        title: "课程介绍",
+        content: '<video width="320" height="240" controls>' +
+            '<source src=' + "http://localhost:8080/sport/resources/media/" + video + ' type="video/mp4">' +
+            '</video>'
+      });
+
     }
 
   }
@@ -517,7 +541,7 @@ export default {
   margin-right: 16px;
 }
 .curriculum-content{
-  width:80px; /*假设，5个字符的宽度是50*/
+  width:200px; /*假设，5个字符的宽度是50*/
   white-space:nowrap; /*禁止换行*/
   text-overflow:ellipsis; /*文本超出隐藏*/
   -o-text-overflow:ellipsis;/*跟上面一样，只是为了兼容其他浏览器*/

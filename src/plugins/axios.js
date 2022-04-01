@@ -9,8 +9,8 @@ import router from "@/router";
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-axios.defaults.headers.common['id'] = localStorage.id
-axios.defaults.headers.common['deviceInfo'] = "sport-manager-client"
+axios.defaults.headers.common['id'] = localStorage.id;
+axios.defaults.headers.common['deviceInfo'] = "sport-manager-client";
 
 let config = {
   baseURL: "http://localhost:8080/sport",
@@ -24,8 +24,9 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    axios.defaults.headers.common['id'] = localStorage.id
-    axios.defaults.headers.common['deviceInfo'] = "sport-manager-client"
+    axios.defaults.headers.common['id'] = localStorage.id;
+    axios.defaults.headers.common['deviceInfo'] = "sport-manager-client";
+      console.log("interceptor-id", localStorage.id);
     return config;
   },
   function(error) {
