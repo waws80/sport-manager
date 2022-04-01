@@ -17,7 +17,7 @@
         <div slot="trigger"></div>
       </Sider>
       <Layout>
-        <Header class="layout-header-bar">
+        <Header class="layout-header-bar" :style="{backgroundColor: '#ffffff'}">
           <strong>运动管理系统</strong>
         </Header>
         <Content :style="{margin: '16px', background: '#fff', minHeight: '220px'}">

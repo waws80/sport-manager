@@ -23,7 +23,7 @@
      </template>
 
      <template slot-scope="{ row }" slot="birthDate">
-       <strong>{{ new Date(row.birthDate).getFullYear() + "-" + (new Date(row.birthDate).getMonth() + 1) + "-" + new Date(row.birthDate).getDate() }}</strong>
+       <strong>{{ new Date(row.birthDate).getFullYear() + "-" + new Date(row.birthDate).getMonth() + "-" + new Date(row.birthDate).getDate() }}</strong>
      </template>
 
      <template slot-scope="{ row, index }" slot="status">
@@ -55,7 +55,6 @@ export default {
       searchForm:{
         username:""
       },
-      avatarUrl: this.resourceAvatar,
       tableHeight: '500px',
       columns: [
         {

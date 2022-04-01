@@ -41,7 +41,7 @@ _axios.interceptors.response.use(
     return response;
   },
   function(error) {
-      if (error.response.status === 400 || error.response.status === 401){
+      if (error.response.status === 403 || error.response.status === 401){
           router.replace('/login');
           console.log('------------');
       }
