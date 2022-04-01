@@ -385,6 +385,7 @@ export default {
         if (response.status === 200){
           this.addModal = false;
           this.$Message.success('添加成功');
+          this.resetMode();
           this.findAllData();
         }else {
           this.$Message.error('添加失败');
@@ -396,6 +397,22 @@ export default {
       }).finally(()=>{
         this.modal_loading = false;
       });
+
+    },
+
+    resetMode(){
+
+      this.addForm.name = "";
+      this.addForm.tip = "";
+      this.addForm.type = "";
+      this.addForm.duration = 0;
+      this.addForm.content = "";
+      this.addForm.thumb = "";
+      this.addForm.video = "";
+      this.addForm.imageFile =  null;
+      this.addForm.imageLoadingStatus = false;
+      this.addForm.videoFile = null;
+      this.addForm.videoLoadingStatus = false;
 
     },
 
